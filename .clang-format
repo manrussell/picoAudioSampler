@@ -1,0 +1,30 @@
+######################################################################################
+#
+# GLIWA configuration for C with clang-format (12 or later)
+#
+# $Author: nick $
+#
+# $Revision: 64120 $
+#
+######################################################################################
+
+BasedOnStyle: Microsoft
+
+AlignConsecutiveAssignments: AcrossEmptyLinesAndComments
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+AllowAllArgumentsOnNextLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
+BraceWrapping:
+    BeforeWhile: true
+ColumnLimit: 86
+# Allow polyspace and copyright comment lines to be too long
+CommentPragmas: '^ polyspace|^  \\copyright'
+IndentPPDirectives: AfterHash
+SortIncludes: Never
+SpaceAroundPointerQualifiers: Both
+SpaceBeforeParens: Never
+SpaceInEmptyParentheses: true
+SpacesInParentheses: true
