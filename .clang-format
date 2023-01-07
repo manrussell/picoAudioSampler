@@ -1,10 +1,17 @@
 ######################################################################################
 #
-# GLIWA configuration for C with clang-format (12 or later)
+# clang-format (12 or later) configuration file for GLIWA C code
+# --------------------------------------------------------------
+# When integrating T1 into an embedded software project, GLIWA provides template C
+# source modules. These provide the required interfaces and tell the user in comments
+# what needs to be done. These templates are formatted using this clang-format
+# configuration file. Using it for the GLIWA templates instead of any other
+# clang-format configuration files avoids massive changes to the templates when
+# editing them. This simplifies browsing the differences.
 #
-# $Author: nick $
+# $Author: peter $
 #
-# $Revision: 64120 $
+# $Revision: 64130 $
 #
 ######################################################################################
 
