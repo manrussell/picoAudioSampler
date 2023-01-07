@@ -1,0 +1,39 @@
+
+$ sudo apt install automake autoconf build-essential texinfo libtool libhidapi-dev libusb-1.0-0-dev
+$ git clone git://git.code.sf.net/p/openocd/code realOpenocd
+$ cd realOpenocd/
+/realOpenocd$ ./bootstrap 
+/realOpenocd$ ./configure --enable-cmsis-dap
+$ make -j4
+
+/realOpenocd$ src/openocd -f board/pico-debug.cfg -s tcl
+
+
+///////////////////// didn't work... it went weird when i tried to connect GDB as 
+~/dev/piPico/pico/realOpenocd$ src/openocd -f board/pico-debug.cfg -s tcl
+Open On-Chip Debugger 0.12.0-rc3+dev-00001-gdfe57baa1 (2023-01-04-10:08)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Warn : rp2040-core0.cfg configuration file is deprecated and will be
+       removed in the next release. Use following parameters instead:
+          -c 'set USE_CORE 0' -f target/rp2040.cfg
+cortex_m reset_config sysresetreq
+
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+Info : Using CMSIS-DAPv2 interface with VID:PID=0x2e8a:0x000c, serial=E661640843986E2A
+Info : CMSIS-DAP: SWD supported
+Info : CMSIS-DAP: Atomic commands supported
+Info : CMSIS-DAP: Test domain timer supported
+Info : CMSIS-DAP: FW Version = 2.0.0
+Info : CMSIS-DAP: Interface Initialised (SWD)
+Info : SWCLK/TCK = 0 SWDIO/TMS = 0 TDI = 0 TDO = 0 nTRST = 0 nRESET = 0
+Info : CMSIS-DAP: Interface ready
+Info : clock speed 4000 kHz
+Info : SWD DPIDR 0x0bc12477
+Error: [rp2040.cpu] Could not find MEM-AP to control the core
+Warn : target rp2040.cpu examination failed
+Info : starting gdb server for rp2040.cpu on 3333
+Info : Listening on port 3333 for gdb connections
+
