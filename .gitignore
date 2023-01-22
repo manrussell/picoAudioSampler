@@ -51,5 +51,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# do want build folder artifacts
+# don't want build folder artifacts
 build/
