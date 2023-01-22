@@ -24,16 +24,20 @@ add_executable(${PROJECT_NAME}
 # disable usb output, enable uart output
 pico_enable_stdio_usb(${PROJECT_NAME} 0)
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
+# pico_enable_stdio_usb(${PROJECT_NAME} 1)
+# pico_enable_stdio_uart(${PROJECT_NAME} 0)
 
 # Create map/bin/hex/uf2 files
 pico_add_extra_outputs(${PROJECT_NAME})
 
 # add lib for adc
 target_link_libraries(
-    ${PROJECT_NAME} 
-    pico_stdlib 
+    ${PROJECT_NAME}
+    pico_stdlib
     hardware_adc
 )
 
 # left for example only
-# add_compile_options(-Wall)
+# add_compile_options(-Wall -Werror)
+
+# add_compile_options( -fsanitize=address -fsanitize=bounds -fsanitize=undefined )
