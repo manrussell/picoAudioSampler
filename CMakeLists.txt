@@ -16,9 +16,13 @@ endif()
 # Creates a pico-sdk subdirectory in our project for the libraries
 pico_sdk_init()
 
+include_directories(${PROJECT_NAME}
+    inc)
+
 # Tell CMake where to find the executable source file
 add_executable(${PROJECT_NAME}
-    main.c
+    src/main.c
+    # inc/myTimers.h
 )
 
 # disable usb output, enable uart output
@@ -26,6 +30,10 @@ pico_enable_stdio_usb(${PROJECT_NAME} 0)
 pico_enable_stdio_uart(${PROJECT_NAME} 1)
 # pico_enable_stdio_usb(${PROJECT_NAME} 1)
 # pico_enable_stdio_uart(${PROJECT_NAME} 0)
+
+# left for example only
+add_compile_options(-Wall -Werror)
+# add_compile_options( -fsanitize=address -fsanitize=bounds -fsanitize=undefined )
 
 # Create map/bin/hex/uf2 files
 pico_add_extra_outputs(${PROJECT_NAME})
@@ -37,7 +45,3 @@ target_link_libraries(
     hardware_adc
 )
 
-# left for example only
-# add_compile_options(-Wall -Werror)
-
-# add_compile_options( -fsanitize=address -fsanitize=bounds -fsanitize=undefined )

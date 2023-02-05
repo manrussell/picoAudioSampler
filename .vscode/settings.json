@@ -20,5 +20,9 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     // path to openocd .exe as it were
     "cortex-debug.openocdPath": "/home/markas/dev/piPico/pico/openocd/src/openocd",
-    "files.trimTrailingWhitespace": true
+    "files.trimTrailingWhitespace": true,
+    "files.associations": {
+        "mytimers.h": "c",
+        "gpio.h": "c"
+    }
 }
