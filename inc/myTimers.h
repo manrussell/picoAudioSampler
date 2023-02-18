@@ -56,9 +56,13 @@ static inline void init_debug_pins( logicAnalyserGpioDebugPin_t *odpins )
  * not what i wanted to do and doesn't work if there ia a return'd value
  */
 #    define time( f_, i_ )                                                           \
-        log_time_pin_start( i_ );                                                    \
-        f_;                                                                          \
-        log_time_pin_stop( i_ );
+        do                                                                           \
+        {                                                                            \
+            log_time_pin_start( i_ );                                                \
+            f_;                                                                      \
+            log_time_pin_stop( i_ );                                                 \
+        }                                                                            \
+        while( 0 )
 
 // todo a proper wrapper if you can remember, look in gtf
 

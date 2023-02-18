@@ -33,6 +33,8 @@ pico_enable_stdio_uart(${PROJECT_NAME} 1)
 
 # left for example only
 add_compile_options(-Wall -Werror)
+# tried to get interleaved C and assembly as the dissassembly window isn't working
+# add_compile_options(-fverbose-asm -S)
 # add_compile_options( -fsanitize=address -fsanitize=bounds -fsanitize=undefined )
 
 # Create map/bin/hex/uf2 files

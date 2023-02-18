@@ -30,14 +30,23 @@
 #define ADC_VREF    ( 3.3 )
 #define ADC_CONVERT ( ADC_VREF / ( ADC_RANGE - 1 ) )
 
-int main( void )
-{
-    logicAnalyserGpioDebugPin_t timingpins[] = { { .pin = 12, .state = false },
+// gpio pins for timing with logic analyser
+static logicAnalyserGpioDebugPin_t timingpins[] = { { .pin = 12, .state = false },
                                                  { .pin = 13, .state = false },
                                                  { .pin = 14, .state = false },
                                                  { .pin = 15, .state = false } };
 
+// callback for the timer IRQ
+bool repeating_timer_callback(struct repeating_timer *t) {
+    // printf("Repeat at %lld\n", time_us_64());
+    log_time_pin_toggle( 2 );
+    return true;
+}
+
+int main( void )
+{
     const uint led_pin                       = 25;
+    struct repeating_timer timer;
     uint adc_raw;
 
     // Initialize LED pin
@@ -58,9 +67,9 @@ int main( void )
     stdio_init_all( );
     printf( "Beep boop, listening...\n" );
 
-    bi_decl( bi_program_description(
-        "Analog microphone example for Raspberry Pi Pico" ) ); // for picotool
-    bi_decl( bi_1pin_with_name( ADC_PIN, "ADC input pin" ) );
+    // bi_decl( bi_program_description(
+    //     "Analog microphone example for Raspberry Pi Pico" ) ); // for picotool
+    // bi_decl( bi_1pin_with_name( ADC_PIN, "ADC input pin" ) );
 
     adc_init( );
     adc_gpio_init( ADC_PIN );
@@ -68,6 +77,12 @@ int main( void )
 
     // status on
     gpio_put( led_pin, true );
+
+    // repeating timer every 27us which is 'nearly' 44100Hz
+    time( add_repeating_timer_us(-100, repeating_timer_callback, NULL, &timer), 3 );
+
+    // wait for a bit... no real reason
+    sleep_us( 100 );
 
     while( 1 )
     {
