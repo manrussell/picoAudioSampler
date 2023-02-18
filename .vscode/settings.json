@@ -24,5 +24,6 @@
     "files.associations": {
         "mytimers.h": "c",
         "gpio.h": "c"
-    }
+    },
+    "cortex-debug.registerUseNaturalFormat": false
 }
