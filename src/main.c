@@ -30,24 +30,41 @@
 #define ADC_VREF    ( 3.3 )
 #define ADC_CONVERT ( ADC_VREF / ( ADC_RANGE - 1 ) )
 
+// ADC data
+typedef struct __attribute__( ( aligned( 4 ) ) )
+{
+    uint adc_val;
+    bool adc_new_data;
+} AdcData;
+
+static AdcData adc_raw                          = { 0, false };
+
 // gpio pins for timing with logic analyser
 static logicAnalyserGpioDebugPin_t timingpins[] = { { .pin = 12, .state = false },
-                                                 { .pin = 13, .state = false },
-                                                 { .pin = 14, .state = false },
-                                                 { .pin = 15, .state = false } };
+                                                    { .pin = 13, .state = false },
+                                                    { .pin = 14, .state = false },
+                                                    { .pin = 15, .state = false } };
 
 // callback for the timer IRQ
-bool repeating_timer_callback(struct repeating_timer *t) {
+bool repeating_timer_callback( struct repeating_timer *t )
+{
     // printf("Repeat at %lld\n", time_us_64());
-    log_time_pin_toggle( 2 );
+    log_time_pin_start( 1 );
+    if( adc_raw.adc_new_data == false )
+    {
+        // take new reading
+        adc_raw.adc_val      = adc_read( ); // raw voltage from ADC... ~2.5uS
+        adc_raw.adc_new_data = true;
+    }
+    log_time_pin_stop( 1 );
+
     return true;
 }
 
 int main( void )
 {
-    const uint led_pin                       = 25;
+    const uint led_pin = 25; // Pi-pico onboard led
     struct repeating_timer timer;
-    uint adc_raw;
 
     // Initialize LED pin
     gpio_init( led_pin );
@@ -75,14 +92,14 @@ int main( void )
     adc_gpio_init( ADC_PIN );
     adc_select_input( ADC_NUM );
 
+    sleep_us( 100 );
+
     // status on
     gpio_put( led_pin, true );
 
     // repeating timer every 27us which is 'nearly' 44100Hz
-    time( add_repeating_timer_us(-100, repeating_timer_callback, NULL, &timer), 3 );
-
-    // wait for a bit... no real reason
-    sleep_us( 100 );
+    // time( add_repeating_timer_us( -100, repeating_timer_callback, NULL, &timer ), 3);
+    add_repeating_timer_ms( -10, repeating_timer_callback, NULL, &timer );
 
     while( 1 )
     {
@@ -90,12 +107,20 @@ int main( void )
         // log_time_pin( loop_start );
         log_time_pin_toggle( loop_start );
 
-        log_time_pin_start( 1 );
-        adc_raw = adc_read( ); // raw voltage from ADC... ~2.5uS
-        log_time_pin_stop( 1 );
+        switch( adc_raw.adc_new_data )
+        {
+        case true:
+            // new data to print
+            adc_raw.adc_new_data = false;
+            time( printf( "%.2f\n", adc_raw.adc_val * ADC_CONVERT ), 2 );
+            // printf( "%.2f\n", adc_raw.adc_val * ADC_CONVERT );
+            break;
 
-        time( printf( "%.2f\n", adc_raw * ADC_CONVERT ), 2 );
-        sleep_ms( 10 );
+        default:
+            break;
+        }
+
+        sleep_ms( 1 ); // this is 10 times the sample rate of the ADC timer
     }
 
     return 0;
